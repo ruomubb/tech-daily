@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --sidebar-width: 280px;
+            --sidebar-width: 260px;
             --primary: #10b981;
             --primary-dark: #059669;
             --primary-light: #d1fae5;
@@ -192,9 +192,19 @@
             color: var(--text-secondary);
         }
 
-        .stats-bar {
+        /* Dashboard View */
+        .dashboard-view {
+            display: block;
+        }
+
+        .source-view {
+            display: none;
+        }
+
+        /* Stats Grid - Enhanced for Dashboard */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -205,24 +215,62 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+
+        .stat-card:nth-child(4)::before {
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .stat-label {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            opacity: 0.5;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: var(--text-primary);
+            margin-bottom: 0.5rem;
         }
 
         .stat-trend {
             font-size: 0.85rem;
-            margin-top: 0.5rem;
-            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .stat-trend.up {
@@ -233,11 +281,82 @@
             color: #ef4444;
         }
 
-        /* Content Area */
-        .content-area {
+        /* Source Cards */
+        .sources-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .source-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .source-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .source-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .source-card-icon {
+            font-size: 2rem;
+        }
+
+        .source-card-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .source-card-count {
+            margin-left: auto;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .source-card-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .source-stat {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .source-stat strong {
+            color: var(--text-primary);
+        }
+
+        /* Recent Articles */
+        .recent-articles {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
         }
 
         .section-header {
@@ -287,7 +406,62 @@
             background: var(--bg-body);
         }
 
-        /* Article Cards Grid */
+        /* Article List */
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .article-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-body);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .article-item:hover {
+            background: var(--primary-light);
+        }
+
+        .article-item-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .article-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .article-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-item-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .article-item-quality {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Articles Grid View */
         .articles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -467,8 +641,11 @@
             .articles-grid {
                 grid-template-columns: 1fr;
             }
-            .stats-bar {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .sources-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -478,30 +655,28 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="brand">
-                <div class="brand-icon">📰</div>
+                <div class="brand-icon">📊</div>
                 <div>
                     <div class="brand-name">技术日报</div>
-                    <div class="brand-subtitle">Tech Daily Report</div>
+                    <div class="brand-subtitle">Tech Daily</div>
                 </div>
             </div>
         </div>
 
         <nav class="nav-section">
-            <div class="nav-section-title">订阅源</div>
-            <a href="#all" class="nav-item active" data-source="all">
-                <span class="nav-icon">📚</span>
-                <span class="nav-label">全部</span>
-                <span class="nav-count">34</span>
+            <div class="nav-section-title">总览</div>
+            <a href="#dashboard" class="nav-item active" data-view="dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">数据看板</span>
             </a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-section-title">订阅源</div>
             <a href="#infoq-cn" class="nav-item" data-source="InfoQ 中国">
                 <span class="nav-icon">📰</span>
                 <span class="nav-label">InfoQ 中国</span>
                 <span class="nav-count" id="count-infoq-cn">0</span>
-            </a>
-            <a href="#infoq-global" class="nav-item" data-source="InfoQ Global">
-                <span class="nav-icon">🌍</span>
-                <span class="nav-label">InfoQ Global</span>
-                <span class="nav-count" id="count-infoq-global">8</span>
             </a>
             <a href="#hacker-news" class="nav-item" data-source="Hacker News">
                 <span class="nav-icon">🔥</span>
@@ -522,18 +697,6 @@
                 <span class="nav-icon">💎</span>
                 <span class="nav-label">掘金</span>
                 <span class="nav-count" id="count-juejin">0</span>
-            </a>
-        </nav>
-
-        <nav class="nav-section">
-            <div class="nav-section-title">其他</div>
-            <a href="#trending" class="nav-item">
-                <span class="nav-icon">📈</span>
-                <span class="nav-label">GitHub Trending</span>
-            </a>
-            <a href="#stats" class="nav-item">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">统计</span>
             </a>
         </nav>
     </aside>
@@ -560,32 +723,108 @@
             </div>
         </div>
 
-        <!-- Stats Bar -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <div class="stat-label">总文章数</div>
-                <div class="stat-value">34</div>
-                <div class="stat-trend up">📈 来自 5 个站点</div>
+        <!-- Dashboard View -->
+        <div class="dashboard-view" id="dashboard-view">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">总文章数</span>
+                        <span class="stat-icon">📰</span>
+                    </div>
+                    <div class="stat-value">34</div>
+                    <div class="stat-trend up">📈 来自 5 个站点</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">精选推荐</span>
+                        <span class="stat-icon">⭐</span>
+                    </div>
+                    <div class="stat-value">34</div>
+                    <div class="stat-trend up">4 星以上高质量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">AI 摘要</span>
+                        <span class="stat-icon">🤖</span>
+                    </div>
+                    <div class="stat-value">34</div>
+                    <div class="stat-trend">100% 覆盖</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">阅读时间</span>
+                        <span class="stat-icon">⏱️</span>
+                    </div>
+                    <div class="stat-value">68</div>
+                    <div class="stat-trend">分钟</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">精选推荐</div>
-                <div class="stat-value">34</div>
-                <div class="stat-trend up">⭐ 4 星以上</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">AI 生成摘要</div>
-                <div class="stat-value">34</div>
-                <div class="stat-trend">🤖 100% 覆盖</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">阅读时间</div>
-                <div class="stat-value">68</div>
-                <div class="stat-trend">⏱️ 分钟</div>
-            </div>
-        </div>
 
-        <!-- Editor's Pick -->
-        
+            <!-- Source Cards -->
+            <div class="section-header">
+                <h2 class="section-title">订阅源概览</h2>
+            </div>
+            <div class="sources-grid">
+                <div class="source-card" onclick="switchToSource('InfoQ 中国')">
+                    <div class="source-card-header">
+                        <span class="source-card-icon">📰</span>
+                        <span class="source-card-name">InfoQ 中国</span>
+                        <span class="source-card-count" id="card-count-infoq-cn">34</span>
+                    </div>
+                    <div class="source-card-stats">
+                        <span class="source-stat"><strong>技术资讯</strong></span>
+                        <span class="source-stat">📊 架构/AI/安全</span>
+                    </div>
+                </div>
+                <div class="source-card" onclick="switchToSource('Hacker News')">
+                    <div class="source-card-header">
+                        <span class="source-card-icon">🔥</span>
+                        <span class="source-card-name">Hacker News</span>
+                        <span class="source-card-count" id="card-count-hacker-news">34</span>
+                    </div>
+                    <div class="source-card-stats">
+                        <span class="source-stat"><strong>科技热点</strong></span>
+                        <span class="source-stat">🌍 全球开发者</span>
+                    </div>
+                </div>
+                <div class="source-card" onclick="switchToSource('GitHub Blog')">
+                    <div class="source-card-header">
+                        <span class="source-card-icon">🐙</span>
+                        <span class="source-card-name">GitHub Blog</span>
+                        <span class="source-card-count" id="card-count-github-blog">34</span>
+                    </div>
+                    <div class="source-card-stats">
+                        <span class="source-stat"><strong>开源动态</strong></span>
+                        <span class="source-stat">🔧 工具/特性</span>
+                    </div>
+                </div>
+                <div class="source-card" onclick="switchToSource('daily.dev')">
+                    <div class="source-card-header">
+                        <span class="source-card-icon">👨‍</span>
+                        <span class="source-card-name">daily.dev</span>
+                        <span class="source-card-count" id="card-count-daily-dev">34</span>
+                    </div>
+                    <div class="source-card-stats">
+                        <span class="source-stat"><strong>开发者社区</strong></span>
+                        <span class="source-stat">💻 个性化推荐</span>
+                    </div>
+                </div>
+                <div class="source-card" onclick="switchToSource('掘金')">
+                    <div class="source-card-header">
+                        <span class="source-card-icon">💎</span>
+                        <span class="source-card-name">掘金</span>
+                        <span class="source-card-count" id="card-count-juejin">34</span>
+                    </div>
+                    <div class="source-card-stats">
+                        <span class="source-stat"><strong>开发者社区</strong></span>
+                        <span class="source-stat">🇨🇳 中文技术</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editor's Pick -->
+            
         <section class="editor-pick-section">
             <div class="editor-badge">💡 主编推荐</div>
             <h3 class="editor-pick-title">10分钟装好一只“龙虾”，周鸿祎亲自动手！360推出国内首个“安全龙虾”，内置百款大模型</h3>
@@ -596,31 +835,156 @@
         </section>
         
 
-        <!-- Content Area -->
-        <div class="content-area">
-            <div class="section-header">
-                <h2 class="section-title">最新文章</h2>
-                <div class="section-actions">
-                    <button class="btn btn-outline">刷新</button>
-                    <button class="btn btn-primary">导出</button>
+            <!-- Recent Articles -->
+            <div class="recent-articles">
+                <div class="section-header">
+                    <h2 class="section-title">最新文章</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline">🔄 刷新</button>
+                        <button class="btn btn-primary">📥 导出</button>
+                    </div>
+                </div>
+                <div class="article-list">
+                    
+            <div class="article-item" onclick="window.open('https://github.blog/news-insights/company-news/addressing-githubs-recent-availability-issues-2/', '_blank')">
+                <span class="article-item-icon">🐙</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">Addressing GitHub’s recent availability issues</div>
+                    <div class="article-item-meta">
+                        <span>GitHub Blog</span>
+                        <span>Wed, 11 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
                 </div>
             </div>
-
-            
-        <section class="source-section" id="source-infoq-中国">
-            <div class="source-header">
-                <div class="source-title">
-                    <span class="source-icon" aria-hidden="true">📰</span>
-                    <h3>InfoQ 中国</h3>
-                </div>
-                <span class="article-count" aria-label="8 articles">8 篇</span>
-            </div>
-            <div class="article-grid" role="list">
         
+            <div class="article-item" onclick="window.open('https://www.johndcook.com/blog/2026/03/10/sinh-arccosh/', '_blank')">
+                <span class="article-item-icon">🔥</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">Why Mathematica does not simplify sinh(arccosh(x))</div>
+                    <div class="article-item-meta">
+                        <span>Hacker News</span>
+                        <span>Wed, 11 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://github.blog/ai-and-ml/github-copilot/the-era-of-ai-as-text-is-over-execution-is-the-new-interface/', '_blank')">
+                <span class="article-item-icon">🐙</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">The era of “AI as text” is over. Execution is the new interface.</div>
+                    <div class="article-item-meta">
+                        <span>GitHub Blog</span>
+                        <span>Tue, 10 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://github.blog/ai-and-ml/github-copilot/continuous-ai-for-accessibility-how-github-transforms-feedback-into-inclusion/', '_blank')">
+                <span class="article-item-icon">🐙</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">Continuous AI for accessibility: How GitHub transforms feedback into inclusion</div>
+                    <div class="article-item-meta">
+                        <span>GitHub Blog</span>
+                        <span>Thu, 12 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://github.blog/news-insights/company-news/github-availability-report-february-2026/', '_blank')">
+                <span class="article-item-icon">🐙</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">GitHub availability report: February 2026</div>
+                    <div class="article-item-meta">
+                        <span>GitHub Blog</span>
+                        <span>Thu, 12 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://github.blog/ai-and-ml/github-copilot/60-million-copilot-code-reviews-and-counting/', '_blank')">
+                <span class="article-item-icon">🐙</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">60 million Copilot code reviews and counting</div>
+                    <div class="article-item-meta">
+                        <span>GitHub Blog</span>
+                        <span>Thu, 05 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://github.blog/developer-skills/career-growth/scaling-ai-opportunity-across-the-globe-learnings-from-github-and-andela/', '_blank')">
+                <span class="article-item-icon">🐙</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">Scaling AI opportunity across the globe: Learnings from GitHub and Andela</div>
+                    <div class="article-item-meta">
+                        <span>GitHub Blog</span>
+                        <span>Thu, 05 Mar 2026</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://bytebytego.com/openai-postgres', '_blank')">
+                <span class="article-item-icon">👨‍💻</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">How OpenAI Scaled to 800M Users With Postgres</div>
+                    <div class="article-item-meta">
+                        <span>daily.dev</span>
+                        <span>0 分钟前</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://dev.to/microservices-performance', '_blank')">
+                <span class="article-item-icon">👨‍💻</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">Microservices Are Killing Your Performance</div>
+                    <div class="article-item-meta">
+                        <span>daily.dev</span>
+                        <span>0 分钟前</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="article-item" onclick="window.open('https://www.infoq.cn/article/XgX3qjd9RZ0aOaFjqbZQ?utm_source=rss&utm_medium=article', '_blank')">
+                <span class="article-item-icon">📰</span>
+                <div class="article-item-content">
+                    <div class="article-item-title">10分钟装好一只“龙虾”，周鸿祎亲自动手！360推出国内首个“安全龙虾”，内置百款大模型</div>
+                    <div class="article-item-meta">
+                        <span>InfoQ 中国</span>
+                        <span>5 小时前</span>
+                        <span class="article-item-quality">⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+        <!-- Source View -->
+        <div class="source-view" id="source-view">
+            <div class="section-header">
+                <h2 class="section-title" id="source-title">最新文章</h2>
+                <div class="section-actions">
+                    <button class="btn btn-outline" onclick="switchToDashboard()">← 返回看板</button>
+                    <button class="btn btn-primary">📥 导出</button>
+                </div>
+            </div>
+            <div class="articles-grid" id="source-articles">
+                
                 <article class="article-card" data-source="InfoQ 中国" role="listitem">
                     <div class="article-card-header">
                         <span class="article-category">人工智能</span>
-                        <time class="article-time" datetime="2026-03-15">4 小时前</time>
+                        <time class="article-time" datetime="2026-03-15">5 小时前</time>
                     </div>
                     <h4 class="article-title">
                         <a href="https://www.infoq.cn/article/XgX3qjd9RZ0aOaFjqbZQ?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">10分钟装好一只“龙虾”，周鸿祎亲自动手！360推出国内首个“安全龙虾”，内置百款大模型</a>
@@ -753,19 +1117,6 @@
                     </div>
                 </article>
             
-            </div>
-        </section>
-        
-        <section class="source-section" id="source-infoq-global">
-            <div class="source-header">
-                <div class="source-title">
-                    <span class="source-icon" aria-hidden="true">🌍</span>
-                    <h3>InfoQ Global</h3>
-                </div>
-                <span class="article-count" aria-label="8 articles">8 篇</span>
-            </div>
-            <div class="article-grid" role="list">
-        
                 <article class="article-card" data-source="InfoQ Global" role="listitem">
                     <div class="article-card-header">
                         <span class="article-category">人工智能</span>
@@ -902,36 +1253,6 @@
                     </div>
                 </article>
             
-            </div>
-        </section>
-        
-        <section class="source-section" id="source-hacker-news">
-            <div class="source-header">
-                <div class="source-title">
-                    <span class="source-icon" aria-hidden="true">🔥</span>
-                    <h3>Hacker News</h3>
-                </div>
-                <span class="article-count" aria-label="8 articles">8 篇</span>
-            </div>
-            <div class="article-grid" role="list">
-        
-                <article class="article-card" data-source="Hacker News" role="listitem">
-                    <div class="article-card-header">
-                        <span class="article-category">网络技术</span>
-                        <time class="article-time" datetime="2026-03-15">Sun, 15 Mar 2026</time>
-                    </div>
-                    <h4 class="article-title">
-                        <a href="https://sa.lj.am/rack-mount-hydroponics/" target="_blank" rel="noopener noreferrer">Rack-mount hydroponics</a>
-                    </h4>
-                    <p class="article-summary"><a href="https://news.ycombinator.com/item?id=47384352">Comments</a></p>
-                    <div class="article-footer">
-                        <div class="article-quality" aria-label="Quality: 5 out of 5 stars">⭐⭐⭐⭐⭐</div>
-                        <a href="https://sa.lj.am/rack-mount-hydroponics/" target="_blank" rel="noopener noreferrer" class="article-link">
-                            阅读原文 <span aria-hidden="true">→</span>
-                        </a>
-                    </div>
-                </article>
-            
                 <article class="article-card" data-source="Hacker News" role="listitem">
                     <div class="article-card-header">
                         <span class="article-category">人工智能</span>
@@ -944,6 +1265,23 @@
                     <div class="article-footer">
                         <div class="article-quality" aria-label="Quality: 5 out of 5 stars">⭐⭐⭐⭐⭐</div>
                         <a href="https://www.charlespetzold.com/blog/2026/02/The-Appalling-Stupidity-of-Spotifys-AI-DJ.html" target="_blank" rel="noopener noreferrer" class="article-link">
+                            阅读原文 <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </article>
+            
+                <article class="article-card" data-source="Hacker News" role="listitem">
+                    <div class="article-card-header">
+                        <span class="article-category">网络技术</span>
+                        <time class="article-time" datetime="2026-03-15">Sun, 15 Mar 2026</time>
+                    </div>
+                    <h4 class="article-title">
+                        <a href="https://sa.lj.am/rack-mount-hydroponics/" target="_blank" rel="noopener noreferrer">Rack-mount hydroponics</a>
+                    </h4>
+                    <p class="article-summary"><a href="https://news.ycombinator.com/item?id=47384352">Comments</a></p>
+                    <div class="article-footer">
+                        <div class="article-quality" aria-label="Quality: 5 out of 5 stars">⭐⭐⭐⭐⭐</div>
+                        <a href="https://sa.lj.am/rack-mount-hydroponics/" target="_blank" rel="noopener noreferrer" class="article-link">
                             阅读原文 <span aria-hidden="true">→</span>
                         </a>
                     </div>
@@ -1051,19 +1389,6 @@
                     </div>
                 </article>
             
-            </div>
-        </section>
-        
-        <section class="source-section" id="source-github-blog">
-            <div class="source-header">
-                <div class="source-title">
-                    <span class="source-icon" aria-hidden="true">🐙</span>
-                    <h3>GitHub Blog</h3>
-                </div>
-                <span class="article-count" aria-label="8 articles">8 篇</span>
-            </div>
-            <div class="article-grid" role="list">
-        
                 <article class="article-card" data-source="GitHub Blog" role="listitem">
                     <div class="article-card-header">
                         <span class="article-category">人工智能</span>
@@ -1200,19 +1525,6 @@
                     </div>
                 </article>
             
-            </div>
-        </section>
-        
-        <section class="source-section" id="source-daily.dev">
-            <div class="source-header">
-                <div class="source-title">
-                    <span class="source-icon" aria-hidden="true">👨‍💻</span>
-                    <h3>daily.dev</h3>
-                </div>
-                <span class="article-count" aria-label="2 articles">2 篇</span>
-            </div>
-            <div class="article-grid" role="list">
-        
                 <article class="article-card" data-source="daily.dev" role="listitem">
                     <div class="article-card-header">
                         <span class="article-category">人工智能</span>
@@ -1248,30 +1560,31 @@
                 </article>
             
             </div>
-        </section>
-        
         </div>
     </main>
 
     <script>
-        // Simple tab switching
-        document.querySelectorAll('.nav-item[data-source]').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                
-                const source = this.dataset.source;
-                if (source === 'all') {
-                    document.querySelectorAll('.article-card').forEach(card => card.style.display = 'flex');
-                } else {
-                    document.querySelectorAll('.article-card').forEach(card => {
-                        const cardSource = card.dataset.source;
-                        card.style.display = cardSource === source ? 'flex' : 'none';
-                    });
-                }
+        function switchToDashboard() {
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('source-view').style.display = 'none';
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector('[data-view="dashboard"]').classList.add('active');
+        }
+
+        function switchToSource(sourceName) {
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('source-view').style.display = 'block';
+            document.getElementById('source-title').textContent = sourceName + '的文章';
+            
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`[data-source="${sourceName}"]`).classList.add('active');
+            
+            // Filter articles
+            document.querySelectorAll('.article-card').forEach(card => {
+                const cardSource = card.dataset.source;
+                card.style.display = cardSource === sourceName ? 'flex' : 'none';
             });
-        });
+        }
     </script>
 </body>
 </html>
