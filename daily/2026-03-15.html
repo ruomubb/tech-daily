@@ -1572,19 +1572,40 @@
         }
 
         function switchToSource(sourceName) {
+            // 隐藏看板，显示文章列表
             document.getElementById('dashboard-view').style.display = 'none';
             document.getElementById('source-view').style.display = 'block';
             document.getElementById('source-title').textContent = sourceName + '的文章';
             
+            // 更新菜单选中状态
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelector(`[data-source="${sourceName}"]`).classList.add('active');
+            const activeItem = document.querySelector(`[data-source="${sourceName}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
             
-            // Filter articles
+            // 只显示对应站点的文章
             document.querySelectorAll('.article-card').forEach(card => {
                 const cardSource = card.dataset.source;
                 card.style.display = cardSource === sourceName ? 'flex' : 'none';
             });
         }
+
+        // 初始化：为左侧菜单添加点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-item[data-source]').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sourceName = this.dataset.source;
+                    switchToSource(sourceName);
+                });
+            });
+
+            document.querySelector('[data-view="dashboard"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                switchToDashboard();
+            });
+        });
     </script>
 </body>
 </html>
